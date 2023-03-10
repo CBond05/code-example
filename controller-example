@@ -1,0 +1,55 @@
+import { ParameterizedContext } from "koa";
+import {
+  fetchAllClasses,
+  fetchClassById,
+  createClass,
+  updateClassById,
+  removeClassById,
+  patchClassById,
+} from "../services/classes.service";
+
+export const fetchAllClassesCtrl = async (ctx: ParameterizedContext) => {
+  const classes = await fetchAllClasses(ctx);
+  ctx.ok(classes);
+};
+
+export const fetchClassByIdCtrl = async (ctx: ParameterizedContext) => {
+  const {
+    params: { id },
+  } = ctx;
+  const classById = await fetchClassById(ctx, id);
+  ctx.ok(classById);
+};
+
+export const createClassCtrl = async (ctx: ParameterizedContext) => {
+  const { body } = ctx.request;
+  const createdClass = await createClass(body, ctx);
+  ctx.ok(createdClass);
+};
+
+export const updateClassByIdCtrl = async (ctx: ParameterizedContext) => {
+  const {
+    params: { id },
+  } = ctx;
+  const { body } = ctx.request;
+  const updatedClass = await updateClassById(id, body, ctx);
+  ctx.ok(updatedClass);
+};
+
+export const patchClassByIdCtrl = async (ctx: ParameterizedContext) => {
+  const {
+    params: { id },
+  } = ctx;
+  const { body } = ctx.request;
+  const updatedClass = await patchClassById(id, body, ctx);
+  ctx.ok(updatedClass);
+};
+
+export const removeClassByIdCtrl = async (ctx: ParameterizedContext) => {
+  const {
+    params: { id },
+    query: { soft = true },
+  } = ctx;
+  const removedClass = await removeClassById(ctx, id, JSON.parse(soft as string));
+  ctx.ok(removedClass);
+};
